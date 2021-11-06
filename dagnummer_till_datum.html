@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: rgba(7, 219, 247, 0.24);
+            min-height: fit-content;   
+        }
+        hr{
+            /* margin-top: 2em; */
+            margin-bottom: 2em;
+            border-style: outset;
+            border-width: 1px;
+        }        
+        #rubrik{
+            font-weight: 700;
+        }
+        .container{
+            margin: 20px;
+            text-align: center;
+        }
+        .content{
+            margin-left: auto;
+            margin-right: auto;
+            max-width: fit-content;
+            padding: 15px 30px;
+            border: outset 2px rgb(190, 190, 190);
+            border-radius: 2%;
+        }
+
+        .fields{
+            margin-top: 20px;
+        }
+        #output_field{
+            text-align: left;
+        }        
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(7, 247, 235, 0.116);;
+            text-align: center;
+            color: rgba(180, 180, 180, 0.808);
+            font-weight: 400;
+            font-size: smaller;
+        }
+        
+    </style>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dagnummer till datum</title>
+</head>
+<body>
+    <!-- Fredrik Wallin 2021-->
+    <div class="container">
+
+        <div class="content">
+
+            <div id="rubrik">
+                Dagnummer till datum
+            </div>
+    
+            <form>
+                <div class="fields">
+                    <input type="text" id="d_number_input" name = "d_number" placeholder="Ange dagens nummer" size="18" autocomplete="off">
+                    <button onclick="knappen()">datum, tack!</button><br>
+                </div>
+                <div class="fields" id="output_field">
+                    <input type="text" id="date_output" name = "date" size="18" readonly>
+                    
+                </div>
+
+                <div class="fields">
+                    <hr>
+                </div>
+
+                <div class="fields">
+                    <label for="year">år: </label>
+                    <select name="year" id="yrs_select">
+                        <!-- Lista med valbara år -->
+                    </select>
+                </div>
+                <div class="fields">
+                    <button onclick="rensa()">Rensa alla fält</button><br>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    
+    <div class="footer" id="footer"></div>
+    
+    <!-- JAVASCRIPT -->
+    
+    <script>
+        const year_selector = document.getElementById("yrs_select")
+        let year = new Date().getFullYear();
+        
+        document.querySelector(".footer").innerHTML = `<p>Fredrik Wallin ${year}</p>`
+        
+        generate_year_selector()
+
+        function generate_year_selector(){
+            const lo_lim = 2
+            const up_lim = 2
+        
+            for(let i = (year -lo_lim); i <= (year + up_lim); i++){
+                year_selector.innerHTML += i === year ? 
+                `<option value=${i} selected>${i}</option>`: 
+                `<option value=${i}>${i}</option>`;
+            }
+        }
+
+        function knappen(){
+            event.preventDefault()
+            
+            let year_selected = year_selector.value;
+            let data_in = document.getElementById("d_number_input").value;
+            let dag_nummer = data_in
+            let datum = numberToDate(dag_nummer, year_selected)
+            document.getElementById("date_output").value = datum;
+        }
+
+        function numberToDate(number, year){
+            let newYear = Date.parse(`${year}-01-01`)
+            const secInDay = 24*60*60*1000
+            return new Date(parseInt(newYear + (number - 1)*secInDay)).toLocaleDateString()
+        }
+
+        function rensa(){
+            event.preventDefault()
+
+            document.getElementById("d_number_input").value = ""
+            document.getElementById("date_output").value = ""
+            document.getElementById("yrs_select").value = year
+        }
+
+    </script>
+</body>
+
+</html>
+
